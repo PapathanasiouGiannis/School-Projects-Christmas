@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Τα Ωραιότερα Νησιά</title>
+
+<style>
+/* ================== VARIABLES ================== */
+:root{
+  --bg:#f4f7fa;
+  --card:#ffffff;
+  --text:#222;
+  --main:#0b1d2a;
+  --accent:#1ecbe1;
+}
+
+/* DARK MODE */
+body.dark{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#e5e7eb;
+  --main:#020617;
+}
+
+/* ================== RESET ================== */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI",system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* ================== LOADER ================== */
+#loader{
+  position:fixed;
+  inset:0;
+  background:var(--main);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+.spinner{
+  width:70px;height:70px;
+  border:4px solid rgba(255,255,255,.3);
+  border-top:4px solid var(--accent);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ================== HERO ================== */
+.hero{
+  height:100vh;
+  background:
+    linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.7)),
+    url("images/hero.jpg");
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:white;
+  padding:20px;
+}
+.hero h1{
+  font-size:clamp(2.5rem,5vw,4rem);
+  animation:fadeUp 1.4s ease forwards;
+}
+.hero p{
+  margin-top:15px;
+  font-size:1.2rem;
+  opacity:0;
+  animation:fadeUp 1.4s ease forwards;
+  animation-delay:.3s;
+}
+
+/* ================== NAV ================== */
+nav{
+  position:sticky;
+  top:0;
+  background:var(--card);
+  box-shadow:0 10px 30px rgba(0,0,0,.1);
+  z-index:100;
+}
+nav ul{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  list-style:none;
+  padding:15px;
+  flex-wrap:wrap;
+}
+nav a{
+  text-decoration:none;
+  color:var(--text);
+  font-weight:600;
+  position:relative;
+}
+nav a::after{
+  content:"";
+  position:absolute;
+  left:0;bottom:-6px;
+  width:0;height:2px;
+  background:var(--accent);
+  transition:.3s;
+}
+nav a:hover::after{width:100%;}
+
+/* ================== TOGGLES ================== */
+.toggles{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:200;
+}
+.toggles button{
+  border:none;
+  padding:12px 14px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:18px;
+  background:var(--accent);
+  color:white;
+}
+
+/* ================== SECTIONS ================== */
+section{
+  max-width:1000px;
+  margin:80px auto;
+  background:var(--card);
+  border-radius:20px;
+  padding:50px;
+  box-shadow:0 20px 50px rgba(0,0,0,.1);
+  opacity:0;
+  transform:translateY(50px);
+  transition:1s ease;
+}
+section.show{
+  opacity:1;
+  transform:translateY(0);
+}
+section h2{
+  margin-bottom:15px;
+  color:var(--main);
+}
+
+/* ================== IMAGE CARD ================== */
+.image-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:16px;
+  margin:25px 0;
+}
+.image-card img{
+  width:100%;
+  display:block;
+  transition:.6s ease;
+}
+.image-card .overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  transition:.4s ease;
+}
+.image-card span{
+  color:white;
+  font-size:2rem;
+  font-weight:600;
+}
+.image-card:hover img{transform:scale(1.08);}
+.image-card:hover .overlay{opacity:1;}
+
+/* ================== MODAL ================== */
+#modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:3000;
+}
+#modal img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:16px;
+}
+
+/* ================== FOOTER ================== */
+footer{
+  background:var(--main);
+  color:white;
+  text-align:center;
+  padding:30px;
+}
+
+/* ================== ANIM ================== */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(40px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ================== MOBILE ================== */
+@media(max-width:600px){
+  section{margin:40px 15px;padding:30px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOADER -->
+<div id="loader"><div class="spinner"></div></div>
+
+<!-- TOGGLES -->
+<div class="toggles">
+  <button onclick="toggleDark()">🌙</button>
+</div>
+
+<header class="hero">
+  <h1>Τα Ωραιότερα Νησιά της Ελλάδας</h1>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#crete">Κρήτη</a></li>
+    <li><a href="#santorini">Σαντορίνη</a></li>
+    <li><a href="#paros">Πάρος</a></li>
+    <li><a href="#corfu">Κέρκυρα</a></li>
+  </ul>
+</nav>
+
+<section id="crete">
+  <h2>Κρήτη</h2>
+  <div class="image-card">
+    <img src="images/crete.jpg">
+    <div class="overlay"><span>Κρήτη</span></div>
+  </div>
+  <p>Το μεγαλύτερο νησί της Ελλάδας με πλούσια ιστορία.</p>
+</section>
+
+<section id="santorini">
+  <h2>Σαντορίνη</h2>
+  <div class="image-card">
+    <img src="images/santorini.jpg">
+    <div class="overlay"><span>Σαντορίνη</span></div>
+  </div>
+  <p>Διάσημη για την καλντέρα και τα ηλιοβασιλέματα.</p>
+</section>
+
+<section id="paros">
+  <h2>Πάρος</h2>
+  <div class="image-card">
+    <img src="images/paros.jpg">
+    <div class="overlay"><span>Πάρος</span></div>
+  </div>
+  <p>Συνδυασμός χαλάρωσης και ζωής.</p>
+</section>
+
+<section id="corfu">
+  <h2>Κέρκυρα</h2>
+  <div class="image-card">
+    <img src="images/corfu.jpg">
+    <div class="overlay"><span>Κέρκυρα</span></div>
+  </div>
+  <p>Πράσινο νησί με ενετική επιρροή.</p>
+</section>
+
+<footer>
+  © 2026 • Γιάννης Παπαθανασίου
+</footer>
+
+<div id="modal"><img id="modalImg"></div>
+
+<script>
+/* LOADER */
+window.onload=()=>document.getElementById("loader").style.display="none";
+
+/* SCROLL */
+const obs=new IntersectionObserver(e=>{
+  e.forEach(x=>x.isIntersecting&&x.target.classList.add("show"));
+},{threshold:.2});
+document.querySelectorAll("section").forEach(s=>obs.observe(s));
+
+/* MODAL */
+document.querySelectorAll(".image-card img").forEach(img=>{
+  img.onclick=()=>{
+    modal.style.display="flex";
+    modalImg.src=img.src;
+  }
+});
+modal.onclick=()=>modal.style.display="none";
+
+/* TOGGLES */
+function toggleDark(){document.body.classList.toggle("dark");}
+</script>
+
+</body>
+</html>
